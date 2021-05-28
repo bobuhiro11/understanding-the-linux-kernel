@@ -1,0 +1,13 @@
+name: action
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: make initrd
+        run: |
+          make initrd
+      - name: make bzImage
+        run: |
+          make bzImage
