@@ -1,0 +1,7 @@
+*.bz2
+*.xz
+*.gz
+busybox-*
+linux-*
+bzImage
+initrd
