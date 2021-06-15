@@ -8,6 +8,10 @@ GIT_URL_3_10_0_1160_31_1_el7 = https://github.com/kernelim/linux.git
 GIT_BRANCH_3_10_0_1160_31_1_el7 = linux-3.10.0-1160.31.1.el7.tar.xz
 DOCKERFILE_3_10_0_1160_31_1_el7 = centos7.Dockerfile
 
+GIT_URL_5_4_0_65_73 = git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal
+GIT_BRANCH_5_4_0_65_73 = Ubuntu-5.4.0-65.73
+DOCKERFILE_5_4_0_65_73 = ubuntu2004.Dockerfile
+
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
 
 busybox/initrd:
@@ -21,7 +25,7 @@ bzImage:
 	cat ${DOCKERFILE_${LINUX_VERSION}} | sudo docker build -t buildenv-${LINUX_VERSION} -
 	sudo docker run --rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
 		buildenv-${LINUX_VERSION} \
-		/bin/bash -c "cd tmp; ls -la; cp /boot/config-* .config; make oldconfig; make bzImage"
+		/bin/bash -c "cd tmp; ls -la; cp /boot/config-* .config; make oldconfig; sed -i -e 's/CONFIG_SYSTEM_TRUSTED_KEYS.*/CONFIG_SYSTEM_TRUSTED_KEYS=/g' .config ; make KCFLAGS= WITH_GCOV=0 bzImage"
 	cp linux-$(LINUX_VERSION)/arch/x86/boot/bzImage . ;
 
 .PHONY: qemu

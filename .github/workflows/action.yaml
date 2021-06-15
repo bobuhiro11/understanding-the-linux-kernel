@@ -16,3 +16,7 @@ jobs:
         run: |
           make LINUX_VERSION=3_10_0_1160_31_1_el7 bzImage
           rm -f bzImage
+      - name: make LINUX_VERSION=5_4_0_65_73 bzImage
+        run: |
+          make LINUX_VERSION=5_4_0_65_73 bzImage
+          rm -f bzImage
