@@ -1,8 +1,8 @@
 BUSYBOX_VERSION = 1.33.0
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
 
-initrd: .config busybox.tar.bz2 inittab passwd rcS ../Dockerfile
-	cat ../Dockerfile | sudo docker build -t centos610-buildenv -
+initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
+	cat ../centos6.Dockerfile | sudo docker build -t centos610-buildenv -
 	tar -xf busybox.tar.bz2
 	sudo cp .config busybox-$(BUSYBOX_VERSION)/.config
 	sudo docker run --rm -v $(CWD)/busybox-$(BUSYBOX_VERSION):/tmp centos610-buildenv \

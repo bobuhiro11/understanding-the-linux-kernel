@@ -1,17 +1,27 @@
-LINUX_VERSION = 2.6.39.4
+LINUX_VERSION = 2_6_39
+
+GIT_URL_2_6_39 = https://github.com/torvalds/linux.git
+GIT_BRANCH_2_6_39 = v2.6.39
+DOCKERFILE_2_6_39 = centos6.Dockerfile
+
+GIT_URL_3_10_0_1160_31_1_el7 = https://github.com/kernelim/linux.git
+GIT_BRANCH_3_10_0_1160_31_1_el7 = linux-3.10.0-1160.31.1.el7.tar.xz
+DOCKERFILE_3_10_0_1160_31_1_el7 = centos7.Dockerfile
+
+CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
 
 busybox/initrd:
 	make -C busybox
 
-linux.tar.xz:
-	curl --retry 5 https://cdn.kernel.org/pub/linux/kernel/v2.6/linux-$(LINUX_VERSION).tar.xz \
-		-o linux.tar.xz
-
-bzImage: linux.tar.xz Dockerfile
-	tar Jxf ./linux.tar.xz
-	cat Dockerfile | sudo docker build -t centos610-buildenv -
-	sudo docker run --rm -v $(PWD)/linux-$(LINUX_VERSION):/tmp centos610-buildenv \
-		/bin/bash -c "cd tmp; ls -la ;make defconfig; make"
+bzImage:
+	test -d linux-${LINUX_VERSION} \
+		|| git clone ${GIT_URL_${LINUX_VERSION}} \
+		--depth 1 \
+		-b ${GIT_BRANCH_${LINUX_VERSION}} linux-${LINUX_VERSION}
+	cat ${DOCKERFILE_${LINUX_VERSION}} | sudo docker build -t buildenv-${LINUX_VERSION} -
+	sudo docker run --rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
+		buildenv-${LINUX_VERSION} \
+		/bin/bash -c "cd tmp; ls -la; cp /boot/config-* .config; make oldconfig; make bzImage"
 	cp linux-$(LINUX_VERSION)/arch/x86/boot/bzImage . ;
 
 .PHONY: qemu

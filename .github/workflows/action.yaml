@@ -8,6 +8,11 @@ jobs:
       - name: make busybox/initrd
         run: |
           make busybox/initrd
-      - name: make bzImage
+      - name: make LINUX_VERSION=2_6_39 bzImage
         run: |
-          make bzImage
+          make LINUX_VERSION=2_6_39 bzImage
+          rm -f bzImage
+      - name: make LINUX_VERSION=3_10_0_1160_31_1_el7 bzImage
+        run: |
+          make LINUX_VERSION=3_10_0_1160_31_1_el7 bzImage
+          rm -f bzImage
