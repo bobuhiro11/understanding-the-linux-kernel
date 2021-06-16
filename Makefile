@@ -39,7 +39,7 @@ bzImage:
 			sed -i -e 's/^CONFIG_MODULE_SIG=.*/CONFIG_MODULE_SIG=n/g' .config; \
 			sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE=.*/CONFIG_CRYPTO_SIGNATURE=n/g' .config; \
 			sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE_DSA=.*/CONFIG_CRYPTO_SIGNATURE_DSA=n/g' .config; \
-			make KCFLAGS= WITH_GCOV=0 bzImage"
+			make -s V=1 KCFLAGS= WITH_GCOV=0 bzImage"
 	cp linux-$(LINUX_VERSION)/arch/x86/boot/bzImage . ;
 
 .PHONY: qemu
