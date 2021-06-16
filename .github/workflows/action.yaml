@@ -1,22 +1,23 @@
 name: action
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 jobs:
-  test:
+  build_busybox:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: make busybox/initrd
         run: |
           make busybox/initrd
-      - name: make LINUX_VERSION=2_6_39 bzImage
+  build_linux:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        linux_version: ["2_6_39", "2_6_32_754_35_1_el6", "3_10_0_1160_31_1_el7", "5_4_0_65_73"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: make LINUX_VERSION=${{ matrix.linux_version }} bzImage
         run: |
-          make LINUX_VERSION=2_6_39 bzImage
-          rm -f bzImage
-      - name: make LINUX_VERSION=3_10_0_1160_31_1_el7 bzImage
-        run: |
-          make LINUX_VERSION=3_10_0_1160_31_1_el7 bzImage
-          rm -f bzImage
-      - name: make LINUX_VERSION=5_4_0_65_73 bzImage
-        run: |
-          make LINUX_VERSION=5_4_0_65_73 bzImage
-          rm -f bzImage
+          make LINUX_VERSION=${{ matrix.linux_version }} bzImage
