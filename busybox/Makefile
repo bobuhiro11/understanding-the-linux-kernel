@@ -11,6 +11,7 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/proc
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/sys
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/dev
+	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/usr/share/udhcpc
 
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/null c 1 3 || true
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/zero c 1 5 || true
@@ -42,9 +43,10 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/input/event3 c 13 67 || true
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/input/event4 c 13 68 || true
 
-	sudo cp inittab busybox-$(BUSYBOX_VERSION)/_install/etc/inittab
-	sudo cp passwd  busybox-$(BUSYBOX_VERSION)/_install/etc/passwd
-	sudo cp rcS     busybox-$(BUSYBOX_VERSION)/_install/etc/init.d/rcS
+	sudo cp inittab               busybox-$(BUSYBOX_VERSION)/_install/etc/inittab
+	sudo cp passwd                busybox-$(BUSYBOX_VERSION)/_install/etc/passwd
+	sudo cp rcS                   busybox-$(BUSYBOX_VERSION)/_install/etc/init.d/rcS
+	sudo cp udhcpc.default.script busybox-$(BUSYBOX_VERSION)/_install/usr/share/udhcpc/default.script
 	cd busybox-$(BUSYBOX_VERSION)/_install && find . | cpio -o -H newc | gzip > ../../initrd
 
 busybox.tar.bz2:

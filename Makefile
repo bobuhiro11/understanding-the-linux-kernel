@@ -39,10 +39,14 @@ bzImage:
 			sed -i -e 's/^CONFIG_MODULE_SIG=.*/CONFIG_MODULE_SIG=n/g' .config; \
 			sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE=.*/CONFIG_CRYPTO_SIGNATURE=n/g' .config; \
 			sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE_DSA=.*/CONFIG_CRYPTO_SIGNATURE_DSA=n/g' .config; \
-			make -s V=1 KCFLAGS= WITH_GCOV=0 bzImage"
+			sed -i -e 's/^CONFIG_VIRTIO_NET=.*/CONFIG_VIRTIO_NET=y/g' .config; \
+			sed -i -e 's/^CONFIG_VIRTIO_RING=.*/CONFIG_VIRTIO_RING=y/g' .config; \
+			sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config; \
+			make -j2 V=0 KCFLAGS= WITH_GCOV=0 bzImage"
 	cp linux-$(LINUX_VERSION)/arch/x86/boot/bzImage . ;
 
 .PHONY: qemu
 qemu: busybox/initrd bzImage
-	qemu-system-x86_64 -kernel ./bzImage -initrd busybox/initrd --nographic \
-		--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init" 
+	qemu-system-x86_64 -kernel ./bzImage -m size=512 -initrd busybox/initrd --nographic \
+		--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init" \
+		-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22
