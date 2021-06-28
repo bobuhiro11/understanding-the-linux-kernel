@@ -1,7 +1,7 @@
 BUSYBOX_VERSION = 1.33.0
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
 
-initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
+initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile sshd
 	cat ../centos6.Dockerfile | sudo docker build -t centos610-buildenv -
 	tar -xf busybox.tar.bz2
 	sudo cp .config busybox-$(BUSYBOX_VERSION)/.config
@@ -10,9 +10,15 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/etc/init.d
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/proc
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/sys
-	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/dev
+	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/dev/pts
+	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/bin
 	sudo mkdir -p busybox-$(BUSYBOX_VERSION)/_install/usr/share/udhcpc
+	sudo mount -t devpts none busybox-$(BUSYBOX_VERSION)/_install/dev/pts
 
+	sudo mknod -m 0666 busybox-$(BUSYBOX_VERSION)/_install/dev/ptmx c 5 2 || true
+	sudo mknod -m 0666 busybox-$(BUSYBOX_VERSION)/_install/dev/tty c 5 0 || true
+	sudo mknod -m 0666 busybox-$(BUSYBOX_VERSION)/_install/dev/random c 1 8 || true
+	sudo mknod -m 0666 busybox-$(BUSYBOX_VERSION)/_install/dev/urandom c 1 9 || true
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/null c 1 3 || true
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/zero c 1 5 || true
 	sudo mknod busybox-$(BUSYBOX_VERSION)/_install/dev/fb0 c 29 0 || true
@@ -46,8 +52,19 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS ../centos6.Dockerfile
 	sudo cp inittab               busybox-$(BUSYBOX_VERSION)/_install/etc/inittab
 	sudo cp passwd                busybox-$(BUSYBOX_VERSION)/_install/etc/passwd
 	sudo cp rcS                   busybox-$(BUSYBOX_VERSION)/_install/etc/init.d/rcS
+	sudo cp profile               busybox-$(BUSYBOX_VERSION)/_install/etc/profile
 	sudo cp udhcpc.default.script busybox-$(BUSYBOX_VERSION)/_install/usr/share/udhcpc/default.script
+
+	# custom sshd server
+	sudo cp sshd                  busybox-$(BUSYBOX_VERSION)/_install/bin/
+	yes | sudo ssh-keygen -t rsa -f busybox-$(BUSYBOX_VERSION)/_install/id_rsa -q -N ""
+	sudo chmod a+r busybox-$(BUSYBOX_VERSION)/_install/id_rsa
+
 	cd busybox-$(BUSYBOX_VERSION)/_install && find . | cpio -o -H newc | gzip > ../../initrd
+
+sshd: sshd.go
+	GO111MODULE=auto go get github.com/kr/pty golang.org/x/crypto/ssh
+	GO111MODULE=auto CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' sshd.go
 
 busybox.tar.bz2:
 	curl --retry 5 https://busybox.net/downloads/busybox-$(BUSYBOX_VERSION).tar.bz2 -o busybox.tar.bz2

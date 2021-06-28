@@ -50,3 +50,7 @@ qemu: busybox/initrd bzImage
 	qemu-system-x86_64 -kernel ./bzImage -m size=512 -initrd busybox/initrd --nographic \
 		--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init" \
 		-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22
+
+.PHONY: ssh
+ssh:
+	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost -p 10022
