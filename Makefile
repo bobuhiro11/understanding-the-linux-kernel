@@ -12,7 +12,7 @@ GIT_URL_3_10_0_1160_31_1_el7 = https://github.com/kernelim/linux.git
 GIT_BRANCH_3_10_0_1160_31_1_el7 = linux-3.10.0-1160.31.1.el7.tar.xz
 DOCKERFILE_3_10_0_1160_31_1_el7 = centos7.Dockerfile
 
-GIT_URL_5_4_0_65_73 = git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal
+GIT_URL_5_4_0_65_73 = git://kernel.ubuntu.com/ubuntu/ubuntu-focal.git
 GIT_BRANCH_5_4_0_65_73 = Ubuntu-5.4.0-65.73
 DOCKERFILE_5_4_0_65_73 = ubuntu2004.Dockerfile
 
