@@ -5,3 +5,4 @@ busybox-*
 linux-*
 bzImage
 initrd
+sshd
