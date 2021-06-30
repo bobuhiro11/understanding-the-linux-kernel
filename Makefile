@@ -17,6 +17,9 @@ GIT_BRANCH_5_4_0_65_73 = Ubuntu-5.4.0-65.73
 DOCKERFILE_5_4_0_65_73 = ubuntu2004.Dockerfile
 
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
+QEMU_OPTS := -kernel ./bzImage -m size=512 -initrd busybox/initrd --nographic \
+	--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init nokaslr" \
+	-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22 \
 
 busybox/initrd:
 	make -C busybox
@@ -47,9 +50,15 @@ bzImage:
 
 .PHONY: qemu
 qemu: busybox/initrd bzImage
-	qemu-system-x86_64 -kernel ./bzImage -m size=512 -initrd busybox/initrd --nographic \
-		--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init" \
-		-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22
+	qemu-system-x86_64 $(QEMU_OPTS)
+
+.PHONY: qemu_freeze
+qemu_freeze: busybox/initrd bzImage
+	qemu-system-x86_64 $(QEMU_OPTS) -gdb tcp::10000 -S
+
+.PHONY: gdb
+gdb: busybox/initrd bzImage
+	cd linux-${LINUX_VERSION} && gdb -x ../init.gdb
 
 .PHONY: ssh
 ssh:
