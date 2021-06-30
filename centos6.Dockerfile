@@ -1,4 +1,4 @@
-FROM centos:6.10
+FROM ghcr.io/buddying-inc/centos68:latest
 
 RUN sed -i "s|#baseurl=|baseurl=|g" /etc/yum.repos.d/CentOS-Base.repo \
   && sed -i "s|mirrorlist=|#mirrorlist=|g" /etc/yum.repos.d/CentOS-Base.repo \
