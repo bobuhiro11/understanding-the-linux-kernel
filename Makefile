@@ -37,7 +37,8 @@ prepare:
 	cat ${DOCKERFILE} | sudo docker build -t buildenv-${LINUX_VERSION} -
 	test -d linux-${LINUX_VERSION} \
 		|| git clone ${GIT_URL} --depth 1 -b ${GIT_BRANCH} linux-${LINUX_VERSION}
-	sudo docker run --rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
+	sudo docker run --sysctl net.ipv6.conf.all.disable_ipv6=1 --cap-add=NET_ADMIN \
+		--rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
 		buildenv-${LINUX_VERSION} \
 		/bin/bash -c "\
 		cd tmp; \
@@ -63,7 +64,8 @@ menuconfig:
 
 .PHONY: bzImage
 bzImage:
-	sudo docker run --rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
+	sudo docker run --sysctl net.ipv6.conf.all.disable_ipv6=1 --cap-add=NET_ADMIN \
+		--rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
 		buildenv-${LINUX_VERSION} \
 		/bin/bash -c "cd tmp; make -j2 V=0 KCFLAGS= WITH_GCOV=0 bzImage"
 
