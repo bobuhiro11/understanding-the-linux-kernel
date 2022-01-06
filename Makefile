@@ -11,6 +11,10 @@ GIT_URL_3_10_0_1160_31_1_el7 := https://github.com/kernelim/linux.git
 GIT_BRANCH_3_10_0_1160_31_1_el7 := linux-3.10.0-1160.31.1.el7.tar.xz
 DOCKERFILE_3_10_0_1160_31_1_el7 := centos7.Dockerfile
 
+GIT_URL_4_18_0_348_7_1_el8_5 := https://github.com/kernelim/linux.git
+GIT_BRANCH_4_18_0_348_7_1_el8_5 := linux-4.18.0-348.7.1.el8_5.tar.xz
+DOCKERFILE_4_18_0_348_7_1_el8_5 := centos8.Dockerfile
+
 GIT_URL_5_4_0_65_73 := git://kernel.ubuntu.com/ubuntu/ubuntu-focal.git
 GIT_BRANCH_5_4_0_65_73 := Ubuntu-5.4.0-65.73
 DOCKERFILE_5_4_0_65_73 := ubuntu2004.Dockerfile
@@ -38,7 +42,7 @@ prepare:
 		/bin/bash -c "\
 		cd tmp; \
 		ls -la; \
-		cp /boot/config-* .config; \
+		cp /boot/config* .config; \
 		make oldconfig; \
 		sed -i -e 's/^CONFIG_SYSTEM_TRUSTED_KEYS=.*/CONFIG_SYSTEM_TRUSTED_KEYS=n/g' .config; \
 		sed -i -e 's/^CONFIG_DIGSIG.*/CONFIG_DIGSIG=n/g' .config; \
