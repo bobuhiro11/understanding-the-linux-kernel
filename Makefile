@@ -50,6 +50,7 @@ prepare:
 		sed -i -e 's/^CONFIG_MODULE_SIG=.*/CONFIG_MODULE_SIG=n/g' .config; \
 		sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE=.*/CONFIG_CRYPTO_SIGNATURE=n/g' .config; \
 		sed -i -e 's/^CONFIG_CRYPTO_SIGNATURE_DSA=.*/CONFIG_CRYPTO_SIGNATURE_DSA=n/g' .config; \
+		sed -i -e 's/^CONFIG_DEBUG_INFO_BTF=.*/CONFIG_DEBUG_INFO_BTF=n/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_NET=.*/CONFIG_VIRTIO_NET=y/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_RING=.*/CONFIG_VIRTIO_RING=y/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config"
