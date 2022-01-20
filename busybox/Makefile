@@ -62,8 +62,10 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS sshd
 	cd busybox-$(BUSYBOX_VERSION)/_install && find . | cpio -o -H newc | gzip > ../../initrd
 
 sshd: sshd.go
-	GO111MODULE=auto go get github.com/kr/pty golang.org/x/crypto/ssh
-	GO111MODULE=auto CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' sshd.go
+	sudo docker run --rm -v $(CWD):/tmp buildenv-busybox \
+		/bin/bash -c "cd /tmp; \
+		go get github.com/kr/pty golang.org/x/crypto/ssh; \
+		go build -a -ldflags '-extldflags \"-static\"' sshd.go"
 
 busybox.tar.bz2:
 	curl --retry 5 https://busybox.net/downloads/busybox-$(BUSYBOX_VERSION).tar.bz2 -o busybox.tar.bz2
