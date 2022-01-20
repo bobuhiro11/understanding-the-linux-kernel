@@ -29,6 +29,9 @@ make busybox/initrd
 # Change the build settings of the kernel. If you don't need it, you can skip this step.
 make menuconfig
 
+# Build the kernel in docker container
+make bzImage
+
 # Boot the kernel on a qemu virtual machine.
 make qemu
 
