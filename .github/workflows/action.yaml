@@ -8,9 +8,12 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: make busybox/initrd
+      - name: install deps
         run: |
-          make prepare busybox/initrd
+          sudo apt -y install qemu-utils
+      - name: make prepare busybox/initrd root.img
+        run: |
+          make prepare busybox/initrd busybox/root.img
   build_linux:
     runs-on: ubuntu-20.04
     strategy:

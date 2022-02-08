@@ -28,8 +28,8 @@ GIT_BRANCH := ${GIT_BRANCH_${LINUX_VERSION}}
 
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
 QEMU_OPTS := -kernel linux-$(LINUX_VERSION)/arch/x86/boot/bzImage -m size=512 -initrd busybox/initrd --nographic \
-	--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init nokaslr" \
-	-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22 \
+	--append "root=/dev/sda rw console=ttyS0 rdinit=/rdinit init=/sbin/init nokaslr" \
+	-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22 -drive file=busybox/root.img,format=raw,if=virtio
 
 .PHONY: prepare
 prepare:
@@ -53,11 +53,20 @@ prepare:
 		sed -i -e 's/^CONFIG_DEBUG_INFO_BTF=.*/CONFIG_DEBUG_INFO_BTF=n/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_NET=.*/CONFIG_VIRTIO_NET=y/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_RING=.*/CONFIG_VIRTIO_RING=y/g' .config; \
+		sed -i -e 's/^CONFIG_VIRTIO_BLK=.*/CONFIG_VIRTIO_BLK=y/g' .config; \
+		sed -i -e 's/^CONFIG_BLK_DEV=.*/CONFIG_BLK_DEV=y/g' .config; \
+		sed -i -e 's/^CONFIG_EXT2_FS=.*/CONFIG_EXT2_FS=y/g' .config; \
+		sed -i -e 's/^CONFIG_EXT3_FS=.*/CONFIG_EXT3_FS=y/g' .config; \
+		sed -i -e 's/^CONFIG_EXT4_FS=.*/CONFIG_EXT4_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config"
 
 .PHONY: busybox/initrd
 busybox/initrd:
 	make -C busybox initrd
+
+.PHONY: busybox/root.img
+busybox/root.img:
+	make -C busybox root.img
 
 .PHONY: menuconfig
 menuconfig:

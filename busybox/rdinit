@@ -1,0 +1,26 @@
+#!/bin/sh -x
+
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+mount -t proc p /proc
+mount -t devpts none /dev/pts
+mkdir -p /mnt/root
+mount /dev/vda1 /mnt/root
+
+echo 'this is rdinit script.'
+
+mkdir -p /mnt/root/sys
+mkdir -p /mnt/root/proc
+mkdir -p /mnt/root/dev
+mount -o move /sys /mnt/root/sys
+mount -o move /proc /mnt/root/proc
+mount -o move /dev /mnt/root/dev
+
+mkdir -p /mnt/root/dev/pts
+mount -t devpts none /mnt/root/dev/pts
+
+# HACK: to mitigate /init checking in switch_root
+# https://github.com/mirror/busybox/blob/eb8d5f3b8/util-linux/switch_root.c#L242
+touch /mnt/root/init
+
+exec switch_root /mnt/root /sbin/init
