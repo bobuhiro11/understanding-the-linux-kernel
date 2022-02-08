@@ -27,9 +27,9 @@ DOCKERFILE := ${DOCKERFILE_${LINUX_VERSION}}
 GIT_BRANCH := ${GIT_BRANCH_${LINUX_VERSION}}
 
 CWD := $(shell cd -P -- '$(shell dirname -- "$0")' && pwd -P)
+CMDLINE := "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init nokaslr"
 QEMU_OPTS := -kernel linux-$(LINUX_VERSION)/arch/x86/boot/bzImage -m size=512 -initrd busybox/initrd --nographic \
-	--append "root=/dev/ram rw console=ttyS0 rdinit=/sbin/init init=/sbin/init nokaslr" \
-	-nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22 \
+	--append $(CMDLINE) -nic user,model=virtio-net-pci,hostfwd=tcp::10022-:22 \
 
 .PHONY: prepare
 prepare:
@@ -88,3 +88,11 @@ gdb:
 .PHONY: ssh
 ssh:
 	ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost -p 10022
+
+.PHONY: all-in-one.img
+all-in-one.img:
+	sudo ./create_disk_image.bash $(CMDLINE) all-in-one.img
+
+.PHONY: run-all-in-one.img
+run-all-in-one.img:
+	qemu-system-x86_64 --nographic -drive format=raw,file=all-in-one.img

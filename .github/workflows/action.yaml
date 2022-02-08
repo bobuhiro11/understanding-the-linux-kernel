@@ -26,3 +26,10 @@ jobs:
       - name: make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage
         run: |
           make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage
+  build_all_in_one_img:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: make all-in-one.img
+        run: |
+          make prepare bzImage busybox/initrd all-in-one.img

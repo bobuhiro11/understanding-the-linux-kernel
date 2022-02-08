@@ -1,6 +1,7 @@
 *.bz2
 *.xz
 *.gz
+*.img
 busybox-*
 linux-*
 bzImage
