@@ -7,6 +7,7 @@ This repository contains a set of scripts that are useful for analyzing the Linu
 - centos7 (kernel v3.10.0-1160.13.1.el7)
 - centos8 (kernel v4.18.0-348.7.1.el8_5)
 - ubuntu20.04 (kernel v5.4.0-65.73)
+- ubuntu22.04 (kernel v5.15.0-43.46)
 
 These are the distributions that I am familiar with, so they are supported by default, but other versions can be applied as well.
 While using this tool, I am reading the book "Understanding the Linux Kernel, 3rd Edition".
@@ -63,4 +64,7 @@ make LINUX_VERSION=4_18_0_348_7_1_el8_5 ...
 
 # ubuntu20.04 (kernel v5.4.0-65.73)
 make LINUX_VERSION=5_4_0_65_73 ...
+
+# ubuntu22.04 (kernel v5.15.0-43.46)
+make LINUX_VERSION=5_15_0_43_46 ...
 ```
