@@ -29,11 +29,11 @@ jobs:
     strategy:
       matrix:
         linux_version:
-          - "2_6_39"
-          - "2_6_32_754_35_1_el6"
-          - "3_10_0_1160_31_1_el7"
-          - "4_18_0_348_7_1_el8_5"
           - "5_4_0_65_73"
+          - "4_18_0_348_7_1_el8_5"
+          - "3_10_0_1160_31_1_el7"
+          - "2_6_32_754_35_1_el6"
+          - "2_6_39"
     steps:
       - uses: actions/checkout@v2
       - name: make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage
