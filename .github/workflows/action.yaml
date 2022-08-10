@@ -37,6 +37,6 @@ jobs:
           - "2_6_39"
     steps:
       - uses: actions/checkout@v2
-      - name: make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage
+      - name: make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage modules
         run: |
-          make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage
+          make LINUX_VERSION=${{ matrix.linux_version }} prepare bzImage modules

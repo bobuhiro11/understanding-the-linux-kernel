@@ -84,6 +84,14 @@ bzImage:
 		buildenv-${LINUX_VERSION} \
 		/bin/bash -c "cd tmp; make -j2 V=0 KCFLAGS= WITH_GCOV=0 bzImage"
 
+.PHONY: modules
+modules:
+	sudo docker run --sysctl net.ipv6.conf.all.disable_ipv6=1 --cap-add=NET_ADMIN \
+		--rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp/linux -v $(CWD)/modules:/tmp/modules \
+		buildenv-${LINUX_VERSION} \
+		/bin/bash -c "cd /tmp/modules/helloworld; make -j2 V=0 KCFLAGS= WITH_GCOV=0 -C /tmp/linux M=/tmp/modules/helloworld modules"
+	sudo ./busybox/add_files_to_root_img.bash ../modules/helloworld/helloworld.ko:/helloworld.ko
+
 .PHONY: qemu
 qemu:
 	qemu-system-x86_64 $(QEMU_OPTS)

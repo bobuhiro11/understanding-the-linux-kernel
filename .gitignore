@@ -1,6 +1,15 @@
 *.bz2
 *.xz
 *.gz
+*.img
+*.tmp_versions
+*.cmd
+*.mod
+*.mod.c
+*.o
+*.ko
+*.order
+Module.symvers
 busybox-*
 linux-*
 bzImage
