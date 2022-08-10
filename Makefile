@@ -19,6 +19,10 @@ GIT_URL_5_4_0_65_73 := git://kernel.ubuntu.com/ubuntu/ubuntu-focal.git
 GIT_BRANCH_5_4_0_65_73 := Ubuntu-5.4.0-65.73
 DOCKERFILE_5_4_0_65_73 := ubuntu2004.Dockerfile
 
+GIT_URL_5_15_0_43_46 := git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/jammy
+GIT_BRANCH_5_15_0_43_46 := Ubuntu-5.15.0-43.46
+DOCKERFILE_5_15_0_43_46 := ubuntu2004.Dockerfile
+
 # the version of Linux you want to use and the associated information,
 # which can be changed as an argument to the make command
 LINUX_VERSION := 2_6_39
@@ -58,6 +62,7 @@ prepare:
 		sed -i -e 's/^CONFIG_EXT2_FS=.*/CONFIG_EXT2_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_EXT3_FS=.*/CONFIG_EXT3_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_EXT4_FS=.*/CONFIG_EXT4_FS=y/g' .config; \
+		sed -i -e 's/^CONFIG_SYSTEM_REVOCATION_KEYS=.*/CONFIG_SYSTEM_REVOCATION_KEYS=""/g' .config; \
 		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config"
 
 .PHONY: busybox/initrd
