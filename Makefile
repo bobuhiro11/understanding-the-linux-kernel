@@ -63,7 +63,9 @@ prepare:
 		sed -i -e 's/^CONFIG_EXT3_FS=.*/CONFIG_EXT3_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_EXT4_FS=.*/CONFIG_EXT4_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_SYSTEM_REVOCATION_KEYS=.*/CONFIG_SYSTEM_REVOCATION_KEYS=""/g' .config; \
-		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config"
+		sed -i -e 's/^CONFIG_MODVERSIONS=.*/CONFIG_MODVERSIONS=n/g' .config; \
+		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config; \
+		make modules_prepare"
 
 .PHONY: busybox/initrd
 busybox/initrd:
