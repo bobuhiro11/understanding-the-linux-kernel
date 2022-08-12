@@ -63,7 +63,9 @@ prepare:
 		sed -i -e 's/^CONFIG_EXT3_FS=.*/CONFIG_EXT3_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_EXT4_FS=.*/CONFIG_EXT4_FS=y/g' .config; \
 		sed -i -e 's/^CONFIG_SYSTEM_REVOCATION_KEYS=.*/CONFIG_SYSTEM_REVOCATION_KEYS=""/g' .config; \
-		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config"
+		sed -i -e 's/^CONFIG_MODVERSIONS=.*/CONFIG_MODVERSIONS=n/g' .config; \
+		sed -i -e 's/^CONFIG_VIRTIO_PCI=.*/CONFIG_VIRTIO_PCI=y/g' .config; \
+		make modules_prepare"
 
 .PHONY: busybox/initrd
 busybox/initrd:
@@ -83,6 +85,14 @@ bzImage:
 		--rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp \
 		buildenv-${LINUX_VERSION} \
 		/bin/bash -c "cd tmp; make -j2 V=0 KCFLAGS= WITH_GCOV=0 bzImage"
+
+.PHONY: modules
+modules:
+	sudo docker run --sysctl net.ipv6.conf.all.disable_ipv6=1 --cap-add=NET_ADMIN \
+		--rm -v $(CWD)/linux-$(LINUX_VERSION):/tmp/linux -v $(CWD)/modules:/tmp/modules \
+		buildenv-${LINUX_VERSION} \
+		/bin/bash -c "cd /tmp/modules/helloworld; make -j2 V=0 KCFLAGS= WITH_GCOV=0 -C /tmp/linux M=/tmp/modules/helloworld modules"
+	sudo ./busybox/add_files_to_root_img.bash ../modules/helloworld/helloworld.ko:/helloworld.ko
 
 .PHONY: qemu
 qemu:
