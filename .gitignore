@@ -6,3 +6,4 @@ linux-*
 bzImage
 initrd
 sshd
+root.img

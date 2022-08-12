@@ -13,7 +13,14 @@ initrd: .config busybox.tar.bz2 inittab passwd rcS sshd
 	cd busybox-$(BUSYBOX_VERSION)/_install && find . | cpio -o -H newc | gzip > ../../initrd
 
 root.img: .config busybox.tar.bz2 inittab passwd rcS sshd
-	sudo ./create_root_img.bash $(CWD) $(BUSYBOX_VERSION)
+	sudo ./create_root_img.bash $(BUSYBOX_VERSION)
+	sudo ./add_files_to_root_img.bash  \
+		inittab:/etc/inittab \
+		passwd:/etc/passwd \
+		rcS:/etc/init.d/rcS \
+		profile:/etc/profile \
+		udhcpc.default.script:/usr/share/udhcpc/default.script \
+		sshd:/bin/sshd \
 
 sshd: sshd.go
 	sudo docker run --rm -v $(CWD):/tmp buildenv-busybox \
