@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
-cwd=$1
-busybox_version=$2
+cwd=$(dirname -- "$0")
+busybox_version=$1
 
 qemu-img create root.img 512M
 parted root.img --script 'mklabel msdos mkpart primary 1M -1s print quit'
