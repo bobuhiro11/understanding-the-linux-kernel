@@ -6,6 +6,7 @@ This repository contains a set of scripts that are useful for analyzing the Linu
 - centos6 (kernel v2.6.32-754.35.1.el6)
 - centos7 (kernel v3.10.0-1160.13.1.el7)
 - centos8 (kernel v4.18.0-348.7.1.el8_5)
+- rocky9 (kernel v5.14.0-162.6.1.el9_1)
 - ubuntu20.04 (kernel v5.4.0-65.73)
 - ubuntu22.04 (kernel v5.15.0-43.46)
 
@@ -61,6 +62,9 @@ make LINUX_VERSION=3_10_0_1160_31_1_el7 ...
 
 # centos8 (kernel v4.18.0-348.7.1.el8_5)
 make LINUX_VERSION=4_18_0_348_7_1_el8_5 ...
+
+# rocky9 (kernel v5.14.0-162.6.1.el9_1)
+make LINUX_VERSION=5_14_0_162_6_1_el9_1 ...
 
 # ubuntu20.04 (kernel v5.4.0-65.73)
 make LINUX_VERSION=5_4_0_65_73 ...
