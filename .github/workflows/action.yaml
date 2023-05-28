@@ -20,6 +20,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: install deps
         run: |
+          sudo apt -y update
           sudo apt -y install qemu-utils
       - name: make prepare busybox/initrd root.img
         run: |
