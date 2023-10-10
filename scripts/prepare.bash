@@ -6,10 +6,28 @@ LINUX_VERSION=$3
 GIT_URL=$4
 GIT_BRANCH=$5
 
+wait_and_retry() {
+  local retries="$1"
+  local wait="$2"
+  local command="${*:3}"
+
+  echo "retries=$retries wait=$wait command=$command"
+
+  $command
+  local exit_code=$?
+
+  if [[ $exit_code -ne 0 && $retries -gt 0 ]]; then
+    sleep "$wait"
+    wait_and_retry $((retries - 1)) "$wait" "$command"
+  else
+    return $exit_code
+  fi
+}
+
 sudo bash -c "docker build -t buildenv-busybox - < centos6.Dockerfile"
 sudo bash -c "docker build -t \"buildenv-${LINUX_VERSION}\" - < $DOCKERFILE"
 test -d "linux-${LINUX_VERSION}" \
-  || git clone "${GIT_URL}" --depth 1 -b "${GIT_BRANCH}" "linux-${LINUX_VERSION}"
+  || wait_and_retry 5 10 git clone "${GIT_URL}" --depth 1 -b "${GIT_BRANCH}" "linux-${LINUX_VERSION}"
 sudo docker run --sysctl net.ipv6.conf.all.disable_ipv6=1 --cap-add=NET_ADMIN \
   --rm -v "${CWD}/linux-${LINUX_VERSION}:/tmp" \
   "buildenv-${LINUX_VERSION}" \
