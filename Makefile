@@ -19,7 +19,7 @@ GIT_URL_5_14_0_162_6_1_el9_1 := https://github.com/kernelim/linux.git
 GIT_BRANCH_5_14_0_162_6_1_el9_1 := linux-5.14.0-162.6.1.el9_1.tar.xz
 DOCKERFILE_5_14_0_162_6_1_el9_1 := rocky9.Dockerfile
 
-GIT_URL_5_4_0_65_73 := git://kernel.ubuntu.com/ubuntu/ubuntu-focal.git
+GIT_URL_5_4_0_65_73 := git://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/focal
 GIT_BRANCH_5_4_0_65_73 := Ubuntu-5.4.0-65.73
 DOCKERFILE_5_4_0_65_73 := ubuntu2004.Dockerfile
 
