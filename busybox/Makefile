@@ -23,9 +23,8 @@ root.img: .config busybox.tar.bz2 inittab passwd rcS sshd
 		sshd:/bin/sshd \
 
 sshd: sshd.go
-	sudo docker run --rm -v $(CWD):/tmp buildenv-busybox \
-		/bin/bash -c "cd /tmp; \
-		go get github.com/kr/pty golang.org/x/crypto/ssh; \
+	sudo docker run --rm -v $(CWD):/tmp/build buildenv-busybox \
+		/bin/bash -c "cd /tmp/build; \
 		go build -a -ldflags '-extldflags \"-static\"' sshd.go"
 
 busybox.tar.bz2:

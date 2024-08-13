@@ -15,6 +15,6 @@ RUN sed -i "s|#baseurl=|baseurl=|g" /etc/yum.repos.d/CentOS-Base.repo \
 RUN yum install -y gcc perl glibc-static kernel kernel-devel \
   autoconf zlib-devel zlib-static openssl-static openssl-devel curl
 
-RUN curl -OL https://go.dev/dl/go1.17.6.linux-amd64.tar.gz \
-  && tar -C $GO_INST_DIR -xzf go1.17.6.linux-amd64.tar.gz \
-  && rm go1.17.6.linux-amd64.tar.gz
+RUN curl -OL https://go.dev/dl/go1.22.6.linux-amd64.tar.gz \
+  && tar -C $GO_INST_DIR -xzf go1.22.6.linux-amd64.tar.gz \
+  && rm go1.22.6.linux-amd64.tar.gz

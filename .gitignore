@@ -9,6 +9,7 @@
 *.o
 *.ko
 *.order
+!go.mod
 Module.symvers
 busybox-*
 linux-*
